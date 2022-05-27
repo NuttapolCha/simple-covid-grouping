@@ -1,0 +1,15 @@
+Log:
+  # Possible value for Log.Level: "info", "debug" or "verbose"
+  Level: "info"
+
+API:
+  ServeHTTPPort: 8080
+
+Client:
+  HTTP:
+    RequestTimeoutSec: 30
+    RetryCount: 3
+    TimeBetweenRetryMilliSec: 200
+
+ExternalAPIs:
+  CovidCasesSource: https://static.wongnai.com/devinterview/covid-cases.json
