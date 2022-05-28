@@ -7,6 +7,8 @@ API:
 
 Client:
   HTTP:
+    # must be true in order to call CovidCasesSource endpoint
+    AllowUnsecureCall: true
     RequestTimeoutSec: 30
     RetryCount: 3
     TimeBetweenRetryMilliSec: 200

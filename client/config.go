@@ -7,15 +7,17 @@ import (
 )
 
 type Config struct {
-	requestTimeoutSec time.Duration
+	requestTimeout    time.Duration
 	timeBetweenRetry  time.Duration
 	retryCount        int
+	allowUnsecureCall bool
 }
 
 func InitConfig() (*Config, error) {
 	return &Config{
-		requestTimeoutSec: viper.GetDuration("Client.HTTP.RequestTimeoutSec") * time.Second,
+		requestTimeout:    viper.GetDuration("Client.HTTP.RequestTimeoutSec") * time.Second,
 		timeBetweenRetry:  viper.GetDuration("Client.HTTP.TimeBetweenRetryMilliSec") * time.Millisecond,
 		retryCount:        viper.GetInt("Client.HTTP.RetryCount"),
+		allowUnsecureCall: viper.GetBool("Client.HTTP.AllowUnsecureCall"),
 	}, nil
 }

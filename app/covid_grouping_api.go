@@ -1,6 +1,12 @@
 package app
 
-import "github.com/spf13/viper"
+import (
+	"context"
+	"net/http"
+
+	"github.com/NuttapolCha/simple-covid-grouping/custom_error"
+	"github.com/spf13/viper"
+)
 
 type ageGroup string
 
@@ -68,14 +74,17 @@ func (externalData *CovidCaseResp) Summarize() interface{} {
 	return ret
 }
 
-func (ctx *Context) GetCovidCasesSummary() (interface{}, error) {
+func (app *App) GetCovidCasesSummary(ctx context.Context) (interface{}, error) {
 	dataSourceUrl := viper.GetString("ExternalAPIs.CovidCasesSource")
 
 	// get data from external
 	externalData := &CovidCaseResp{}
-	if err := ctx.conn.Get(dataSourceUrl, externalData); err != nil {
-		ctx.logger.Errorf("could not request COVID data from source because :%v", err)
-		return nil, err
+	if err := app.conn.Get(ctx, dataSourceUrl, externalData); err != nil {
+		app.logger.Errorf("could not request COVID data from source because :%v", err)
+		return nil, &custom_error.UserError{
+			Message:    err.Error(),
+			StatusCode: http.StatusBadGateway,
+		}
 	}
 
 	return externalData.Summarize(), nil

@@ -1,6 +1,8 @@
 package client
 
 import (
+	"context"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -18,18 +20,23 @@ type HttpClient struct {
 	config *Config
 }
 
-func NewHttpClient(config *Config) (Client, error) {
+func NewHttpClient(config *Config, logger log.Logger) (Client, error) {
 	return &HttpClient{
+		logger: logger,
 		c: &http.Client{
-			Timeout: config.requestTimeoutSec,
+			Timeout: config.requestTimeout,
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{InsecureSkipVerify: config.allowUnsecureCall},
+			},
 		},
 		config: config,
 	}, nil
 }
 
-func (client *HttpClient) Get(url string, placeHolder interface{}) (err error) {
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+func (client *HttpClient) Get(ctx context.Context, url string, placeHolder interface{}) (err error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
+		client.logger.Errorf("could not establish a new GET request because: %v", err)
 		return err
 	}
 
@@ -61,6 +68,10 @@ func (client *HttpClient) Get(url string, placeHolder interface{}) (err error) {
 			client.logger.Errorf("could not read response body because: %v", err)
 			return err
 		}
+
+		client.logger.Debugf("response body =")
+		client.logger.BeautyJSON(body)
+
 		if err := json.Unmarshal(body, placeHolder); err != nil {
 			client.logger.Errorf("could not unmarshal JSON bytes to GO struct because: %v", err)
 			return err

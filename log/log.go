@@ -40,6 +40,14 @@ func NewLogger() (Logger, error) {
 	return logger, nil
 }
 
+func (logger *Logger) Level() string {
+	return map[logLevel]string{
+		info:    "INFO",
+		debug:   "DEBUG",
+		verbose: "VERBOSE",
+	}[logger.level]
+}
+
 func (logger *Logger) Infof(template string, args ...interface{}) {
 	log.Printf("\033[0;34m[INFO]\033[0;37m "+template+"\n", args...)
 }

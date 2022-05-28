@@ -1,5 +1,7 @@
 package client
 
+import "context"
+
 type Client interface {
-	Get(url string, resp interface{}) error
+	Get(ctx context.Context, url string, resp interface{}) error
 }
