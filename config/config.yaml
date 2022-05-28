@@ -1,6 +1,8 @@
 Log:
   # Possible value for Log.Level: "info", "debug" or "verbose"
-  Level: "info"
+  Level: "debug"
+
+ProductionMode: true
 
 API:
   ServeHTTPPort: 8080

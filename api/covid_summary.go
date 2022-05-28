@@ -16,6 +16,7 @@ func init() {
 }
 
 func covidSummaryHandler(c *gin.Context) {
+	service.Logger.Debugf("client IP: %s", c.ClientIP())
 	ctx := c.Request.Context()
 
 	summary, err := service.GetCovidCasesSummary(ctx)

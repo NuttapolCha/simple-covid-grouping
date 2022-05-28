@@ -6,7 +6,7 @@ import (
 )
 
 type App struct {
-	logger log.Logger
+	Logger log.Logger
 	conn   client.Client
 }
 
@@ -21,7 +21,7 @@ func New(logger log.Logger) (*App, error) {
 	}
 
 	application := &App{
-		logger: logger,
+		Logger: logger,
 		conn:   httpClient,
 	}
 

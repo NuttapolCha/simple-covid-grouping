@@ -5,6 +5,7 @@ import (
 
 	"github.com/NuttapolCha/simple-covid-grouping/app"
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 )
 
 type API struct {
@@ -24,7 +25,15 @@ func Init(application *app.App) *gin.Engine {
 		service = application
 	}
 
+	mode := gin.DebugMode
+	if viper.GetBool("ProductionMode") {
+		mode = gin.ReleaseMode
+	}
+	service.Logger.Debugf("gin mode = %s", mode)
+	gin.SetMode(mode)
+
 	router := gin.New()
+	router.SetTrustedProxies(nil)
 
 	// middlewares
 	router.Use(gin.Logger())

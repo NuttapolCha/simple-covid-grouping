@@ -80,7 +80,7 @@ func (app *App) GetCovidCasesSummary(ctx context.Context) (interface{}, error) {
 	// get data from external
 	externalData := &CovidCaseResp{}
 	if err := app.conn.Get(ctx, dataSourceUrl, externalData); err != nil {
-		app.logger.Errorf("could not request COVID data from source because :%v", err)
+		app.Logger.Errorf("could not request COVID data from source because :%v", err)
 		return nil, &custom_error.UserError{
 			Message:    err.Error(),
 			StatusCode: http.StatusBadGateway,

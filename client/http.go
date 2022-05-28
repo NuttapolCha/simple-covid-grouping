@@ -45,6 +45,7 @@ func (client *HttpClient) Get(ctx context.Context, url string, placeHolder inter
 		var resp *http.Response
 
 		// do request
+		client.logger.Debugf("GET requesting to %s", url)
 		resp, err = client.c.Do(req)
 		if err != nil {
 			client.logger.Errorf("attemp %d: failed to GET %s, because: %v, retrying in %v", attmps+1, url, err, client.config.timeBetweenRetry)
@@ -69,7 +70,7 @@ func (client *HttpClient) Get(ctx context.Context, url string, placeHolder inter
 			return err
 		}
 
-		client.logger.Debugf("response body =")
+		client.logger.Debugf("response body = {shown in verbose level}")
 		client.logger.BeautyJSON(body)
 
 		if err := json.Unmarshal(body, placeHolder); err != nil {
